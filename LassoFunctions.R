@@ -16,8 +16,8 @@ standardizeXY <- function(X, Y){
   Xmeans <- colMeans(X)
   Xtilde <- X - matrix(Xmeans, n, p, byrow = TRUE)
   
-  #weights <- sqrt(colSums(Xtilde^2) / n)
-  #Xtilde <- Xtilde %*% diag(1 / weights)
+  weights <- sqrt(colSums(Xtilde^2) / n)
+  Xtilde <- Xtilde %*% diag(1 / weights)
   
   # Return:
   # Xtilde - centered and appropriately scaled X
