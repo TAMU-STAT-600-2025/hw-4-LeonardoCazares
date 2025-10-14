@@ -89,9 +89,9 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   
   #[ToDo]  Check that lambda is non-negative
   
-  #if (lambda < 0){
-  #  stop('lambda is negative')
-  #}
+  if (lambda < 0){
+    stop('lambda is negative')
+  }
   
   #[ToDo]  Check for starting point beta_start. 
   # If none supplied, initialize with a vector of zeros.
