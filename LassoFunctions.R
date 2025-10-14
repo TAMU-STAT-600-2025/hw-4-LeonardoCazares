@@ -40,7 +40,14 @@ soft <- function(a, lambda){
 # lamdba - tuning parameter
 # beta - value of beta at which to evaluate the function
 lasso <- function(Xtilde, Ytilde, beta, lambda){
- 
+  
+  Xtilde <- as.matrix(Xtilde)
+  Ytilde <- as.numeric(Ytilde)
+  beta <- as.numeric(beta)
+  
+  n <- nrow(Xtilde)
+  p <- ncol(Xtilde)
+  
 }
 
 # [ToDo] Fit LASSO on standardized data for a given lambda
