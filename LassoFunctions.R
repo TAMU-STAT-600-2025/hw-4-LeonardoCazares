@@ -3,21 +3,24 @@
 # Y - n x 1 response vector
 standardizeXY <- function(X, Y){
   
+  # Check all arrays are matrices
   X <- as.matrix(X)
   Y <- as.numeric(Y)
+  
+  # Get dimentions of data
   n <- nrow(X)
   p <- ncol(X)
   
   ## [ToDo] Center Y
-  Ymean <- mean(Y)
-  Ytilde <- Y - Ymean
+  Ymean <- mean(Y) # Mean on the vector Y
+  Ytilde <- Y - Ymean # Centered vector
   
   ## [ToDo] Center and scale X
-  Xmeans <- colMeans(X)
-  Xtilde <- X - matrix(Xmeans, n, p, byrow = TRUE)
+  Xmeans <- colMeans(X) # Vector of means for all the columns
+  Xtilde <- X - matrix(Xmeans, n, p, byrow = TRUE) # Centered X
   
-  weights <- sqrt(colSums(Xtilde^2) / n)
-  Xtilde <- Xtilde %*% diag(1 / weights)
+  weights <- sqrt(colSums(Xtilde^2) / n) # Sample variance for all the columns
+  Xtilde <- Xtilde %*% diag(1 / weights) # Normalized X
   
   # Return:
   # Xtilde - centered and appropriately scaled X
@@ -31,7 +34,7 @@ standardizeXY <- function(X, Y){
 # [ToDo] Soft-thresholding of a scalar a at level lambda 
 # [OK to have vector version as long as works correctly on scalar; will only test on scalars]
 soft <- function(a, lambda){
-  return(sign(a) * max(abs(a) - lambda, 0))
+  return(sign(a) * max(abs(a) - lambda, 0)) # Soft-threshholding value
 }
 
 # [ToDo] Calculate objective function of lasso given current values of Xtilde, Ytilde, beta and lambda
@@ -41,12 +44,16 @@ soft <- function(a, lambda){
 # beta - value of beta at which to evaluate the function
 lasso <- function(Xtilde, Ytilde, beta, lambda){
   
+  # Check all the arrays are numeric
   Xtilde <- as.matrix(Xtilde)
   Ytilde <- as.numeric(Ytilde)
   beta <- as.numeric(beta)
   
+  # Get dimentions
   n <- nrow(Xtilde)
   p <- ncol(Xtilde)
+  
+  
   
 }
 
