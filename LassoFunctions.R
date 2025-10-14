@@ -13,9 +13,9 @@ standardizeXY <- function(X, Y){
   Ytilde <- Y - Ymean
   
   ## [ToDo] Center and scale X
-  #Xmeans <- colMeans(X)
-  #Xtilde <- X - matrix(Xmeans, n, p, byrow = TRUE)
-  #
+  Xmeans <- colMeans(X)
+  Xtilde <- X - matrix(Xmeans, n, p, byrow = TRUE)
+  
   #weights <- sqrt(colSums(Xtilde^2) / n)
   #Xtilde <- Xtilde %*% diag(1 / weights)
   
