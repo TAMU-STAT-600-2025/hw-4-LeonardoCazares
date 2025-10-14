@@ -2,10 +2,22 @@
 # X - n x p matrix of covariates
 # Y - n x 1 response vector
 standardizeXY <- function(X, Y){
-  # [ToDo] Center Y
   
-  # [ToDo] Center and scale X
+  X <- as.matrix(X)
+  Y <- as.numeric(Y)
+  n <- nrow(X)
+  p <- ncol(X)
   
+  ## [ToDo] Center Y
+  #Ymean <- mean(Y)
+  #Ytilde <- Y - Ymean
+  #
+  ## [ToDo] Center and scale X
+  #Xmeans <- colMeans(X)
+  #Xtilde <- X - matrix(Xmeans, n, p, byrow = TRUE)
+  #
+  #weights <- sqrt(colSums(Xtilde^2) / n)
+  #Xtilde <- Xtilde %*% diag(1 / weights)
   
   # Return:
   # Xtilde - centered and appropriately scaled X
@@ -19,7 +31,7 @@ standardizeXY <- function(X, Y){
 # [ToDo] Soft-thresholding of a scalar a at level lambda 
 # [OK to have vector version as long as works correctly on scalar; will only test on scalars]
 soft <- function(a, lambda){
-
+#  return(sign(a) * max(abs(a) - lambda, 0))
 }
 
 # [ToDo] Calculate objective function of lasso given current values of Xtilde, Ytilde, beta and lambda
