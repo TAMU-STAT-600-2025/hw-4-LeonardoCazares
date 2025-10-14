@@ -127,9 +127,9 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
                       lambda)
     }
     
-    #fmin <- lasso(Xtilde, Ytilde, beta, lambda)
-    #diff_obj <- abs(fmin_old - fmin)
-    #fmin_old <- fmin
+    fmin <- lasso(Xtilde, Ytilde, beta, lambda)
+    diff_obj <- abs(fmin_old - fmin)
+    fmin_old <- fmin
     
   }
   
