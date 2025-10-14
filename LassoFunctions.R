@@ -9,9 +9,9 @@ standardizeXY <- function(X, Y){
   p <- ncol(X)
   
   ## [ToDo] Center Y
-  #Ymean <- mean(Y)
-  #Ytilde <- Y - Ymean
-  #
+  Ymean <- mean(Y)
+  Ytilde <- Y - Ymean
+  
   ## [ToDo] Center and scale X
   #Xmeans <- colMeans(X)
   #Xtilde <- X - matrix(Xmeans, n, p, byrow = TRUE)
