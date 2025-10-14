@@ -53,7 +53,20 @@ lasso <- function(Xtilde, Ytilde, beta, lambda){
   n <- nrow(Xtilde)
   p <- ncol(Xtilde)
   
+  # Check dimentional compatibility among: Xilde, Ytilde and beta
+  if (length(Ytilde) != n){
+    stop('Xtilde and Ytilde are incompatible in dimentions.')
+  }
+  if (length(beta) != p){
+    stop('Xtilde and beta are incompatible in dimentions.')
+  }
+    
+  r <- Ytilde - as.vector(Xtilde %*% beta)
+  loss <- as.numeric(crossprod(r)) / (2 * n)
   
+  pen <- as.numeric(lambda * sum(abs(beta)))
+  
+  return(loss + pen)
   
 }
 
