@@ -87,12 +87,12 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
     stop('n is not the same between Xtilde and Ytilde')
   }
   
-  ##[ToDo]  Check that lambda is non-negative
-  #
-  #if (lambda < 0){
-  #  stop('lambda is negative')
-  #}
-  #
+  #[ToDo]  Check that lambda is non-negative
+  
+  if (lambda < 0){
+    stop('lambda is negative')
+  }
+  
   ##[ToDo]  Check for starting point beta_start. 
   ## If none supplied, initialize with a vector of zeros.
   ## If supplied, check for compatibility with Xtilde in terms of p
