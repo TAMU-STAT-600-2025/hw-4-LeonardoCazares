@@ -119,21 +119,21 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   beta <- beta_start
   diff_obj <- eps + 1
     
-  #while (diff_obj >= eps){
-  #  
-  #  for (i in 1:p){
-  #    beta[i] <- soft((1 / nXtilde) * crossprod(Xtilde[, i],
-  #                                              Ytilde - Xtilde[, -i, drop=FALSE] %*% beta[-i]),
-  #                    lambda)
-  #  }
-  #  
-  #  fmin <- lasso(Xtilde, Ytilde, beta, lambda)
-  #  diff_obj <- abs(fmin_old - fmin)
-  #  fmin_old <- fmin
-  #  
-  #}
-  #
-  #return(list(beta = beta, fmin = fmin))
+  while (diff_obj >= eps){
+    
+    for (i in 1:p){
+      beta[i] <- soft((1 / nXtilde) * crossprod(Xtilde[, i],
+                                                Ytilde - Xtilde[, -i, drop=FALSE] %*% beta[-i]),
+                      lambda)
+    }
+    
+    #fmin <- lasso(Xtilde, Ytilde, beta, lambda)
+    #diff_obj <- abs(fmin_old - fmin)
+    #fmin_old <- fmin
+    
+  }
+  
+  return(list(beta = beta, fmin = fmin))
 }
 
 # [ToDo] Fit LASSO on standardized data for a sequence of lambda values. Sequential version of a previous function.
