@@ -106,19 +106,19 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
     }
   }
   
-  ##[ToDo]  Coordinate-descent implementation. 
-  ## Stop when the difference between objective functions is less than eps for the first time.
-  ## For example, if you have 3 iterations with objectives 3, 1, 0.99999,
-  ## your should return fmin = 0.99999, and4 not have another iteration
-  #
-  ## Return 
-  ## beta - the solution (a vector)
-  ## fmin - optimal function value (value of objective at beta, scalar)
-  #
-  #fmin_old <- lasso(Xtilde, Ytilde, beta_start, lambda)
-  #beta <- beta_start
-  #diff_obj <- eps + 1
-  #  
+  #[ToDo]  Coordinate-descent implementation. 
+  # Stop when the difference between objective functions is less than eps for the first time.
+  # For example, if you have 3 iterations with objectives 3, 1, 0.99999,
+  # your should return fmin = 0.99999, and4 not have another iteration
+  
+  # Return 
+  # beta - the solution (a vector)
+  # fmin - optimal function value (value of objective at beta, scalar)
+  
+  fmin_old <- lasso(Xtilde, Ytilde, beta_start, lambda)
+  beta <- beta_start
+  diff_obj <- eps + 1
+    
   #while (diff_obj >= eps){
   #  
   #  for (i in 1:p){
