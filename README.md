@@ -6,6 +6,8 @@
 the enclosed pdf for correct rendering of all equations (an exact copy
 of this file)
 
+**Name:** Leonardo Damián Cázares-Trejo
+
 ## Introduction
 
 We consider the training data consisting of
