@@ -81,40 +81,59 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   
   nXtilde <- nrow(Xtilde)
   nYtilde <- length(Ytilde)
-  p <- ncol(nXtilde)
+  p <- ncol(Xtilde)
   
-  if (nXtilde != Ytilde){
+  if (nXtilde != nYtilde){
     stop('n is not the same between Xtilde and Ytilde')
   }
   
-  #[ToDo]  Check that lambda is non-negative
-  
-  if (lambda < 0){
-    stop('lambda is negative')
-  }
-  
-  #[ToDo]  Check for starting point beta_start. 
-  # If none supplied, initialize with a vector of zeros.
-  # If supplied, check for compatibility with Xtilde in terms of p
-  
-  if (is.null(beta_start)){
-    beta_start <- rep(0, p) 
-  }
-  else{
-    if (length(beta_start) != p){
-      stop('Initial beta is not compatible with Xtilde')
-    }
-  }
-  
-  #[ToDo]  Coordinate-descent implementation. 
-  # Stop when the difference between objective functions is less than eps for the first time.
-  # For example, if you have 3 iterations with objectives 3, 1, 0.99999,
-  # your should return fmin = 0.99999, and4 not have another iteration
-  
-  # Return 
-  # beta - the solution (a vector)
-  # fmin - optimal function value (value of objective at beta, scalar)
-  return(list(beta = beta, fmin = fmin))
+  ##[ToDo]  Check that lambda is non-negative
+  #
+  #if (lambda < 0){
+  #  stop('lambda is negative')
+  #}
+  #
+  ##[ToDo]  Check for starting point beta_start. 
+  ## If none supplied, initialize with a vector of zeros.
+  ## If supplied, check for compatibility with Xtilde in terms of p
+  #
+  #if (is.null(beta_start)){
+  #  beta_start <- rep(0, p) 
+  #}
+  #else{
+  #  if (length(beta_start) != p){
+  #    stop('Initial beta is not compatible with Xtilde')
+  #  }
+  #}
+  #
+  ##[ToDo]  Coordinate-descent implementation. 
+  ## Stop when the difference between objective functions is less than eps for the first time.
+  ## For example, if you have 3 iterations with objectives 3, 1, 0.99999,
+  ## your should return fmin = 0.99999, and4 not have another iteration
+  #
+  ## Return 
+  ## beta - the solution (a vector)
+  ## fmin - optimal function value (value of objective at beta, scalar)
+  #
+  #fmin_old <- lasso(Xtilde, Ytilde, beta_start, lambda)
+  #beta <- beta_start
+  #diff_obj <- eps + 1
+  #  
+  #while (diff_obj >= eps){
+  #  
+  #  for (i in 1:p){
+  #    beta[i] <- soft((1 / nXtilde) * crossprod(Xtilde[, i],
+  #                                              Ytilde - Xtilde[, -i, drop=FALSE] %*% beta[-i]),
+  #                    lambda)
+  #  }
+  #  
+  #  fmin <- lasso(Xtilde, Ytilde, beta, lambda)
+  #  diff_obj <- abs(fmin_old - fmin)
+  #  fmin_old <- fmin
+  #  
+  #}
+  #
+  #return(list(beta = beta, fmin = fmin))
 }
 
 # [ToDo] Fit LASSO on standardized data for a sequence of lambda values. Sequential version of a previous function.
