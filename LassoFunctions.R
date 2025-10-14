@@ -79,18 +79,20 @@ lasso <- function(Xtilde, Ytilde, beta, lambda){
 fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps = 0.001){
   #[ToDo]  Check that n is the same between Xtilde and Ytilde
   
+  # Get dimentions from Xtilde and Ytilde
   nXtilde <- nrow(Xtilde)
   nYtilde <- length(Ytilde)
   p <- ncol(Xtilde)
   
+  # Check dimentional compatibility for nXtilde and nYtilde
   if (nXtilde != nYtilde){
     stop('n is not the same between Xtilde and Ytilde')
   }
   
   #[ToDo]  Check that lambda is non-negative
   
-  if (lambda < 0){
-    stop('lambda is negative')
+  if (lambda < 0){ # Check lambda sign
+    stop('lambda is negative') 
   }
   
   #[ToDo]  Check for starting point beta_start. 
@@ -98,11 +100,11 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   # If supplied, check for compatibility with Xtilde in terms of p
   
   if (is.null(beta_start)){
-    beta_start <- rep(0, p) 
+    beta_start <- rep(0, p) # Initialize beta of 0's 
   }
   else{
     if (length(beta_start) != p){
-      stop('Initial beta is not compatible with Xtilde')
+      stop('Initial beta is not compatible with Xtilde') # Check dimentional corectness for beta
     }
   }
   
@@ -115,18 +117,22 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   # beta - the solution (a vector)
   # fmin - optimal function value (value of objective at beta, scalar)
   
+  # Initial values for objective function, beta and threshold.
   fmin_old <- lasso(Xtilde, Ytilde, beta_start, lambda)
   beta <- beta_start
   diff_obj <- eps + 1
-    
+  
+  # While diff doesn't surpass threshold  
   while (diff_obj >= eps){
     
+    # Compute the coordinate descent for each entry in beta
     for (i in 1:p){
       beta[i] <- soft((1 / nXtilde) * crossprod(Xtilde[, i],
                                                 Ytilde - Xtilde[, -i, drop=FALSE] %*% beta[-i]),
                       lambda)
     }
     
+    # Update values for the objective function and the difference with the former one
     fmin <- lasso(Xtilde, Ytilde, beta, lambda)
     diff_obj <- abs(fmin_old - fmin)
     fmin_old <- fmin
