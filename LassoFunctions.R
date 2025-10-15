@@ -60,7 +60,7 @@ lasso <- function(Xtilde, Ytilde, beta, lambda){
   if (length(beta) != p){
     stop('Xtilde and beta are incompatible in dimentions.')
   }
-    
+  
   r <- Ytilde - as.vector(Xtilde %*% beta)
   loss <- as.numeric(crossprod(r)) / (2 * n)
   
@@ -80,6 +80,8 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   #[ToDo]  Check that n is the same between Xtilde and Ytilde
   
   # Get dimentions from Xtilde and Ytilde
+  Xtilde <- as.matrix(Xtilde)
+  Ytilde <- as.numeric(Ytilde)
   nXtilde <- nrow(Xtilde)
   nYtilde <- length(Ytilde)
   p <- ncol(Xtilde)
@@ -90,22 +92,20 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   }
   
   #[ToDo]  Check that lambda is non-negative
-  
-  if (lambda < 0){ # Check lambda sign
+  if (any(lambda < 0)){ # Check lambda sign
     stop('lambda is negative') 
   }
   
   #[ToDo]  Check for starting point beta_start. 
   # If none supplied, initialize with a vector of zeros.
   # If supplied, check for compatibility with Xtilde in terms of p
-  
   if (is.null(beta_start)){
-    beta_start <- rep(0, p) # Initialize beta of 0's 
-  }
-  else{
+    beta <- rep(0, p) # Initialize beta of 0's 
+  } else {
     if (length(beta_start) != p){
-      stop('Initial beta is not compatible with Xtilde') # Check dimentional corectness for beta
+      stop('Initial beta is not compatible with Xtilde') # Check dimentional correctness for beta
     }
+    beta <- as.numeric(beta_start)
   }
   
   #[ToDo]  Coordinate-descent implementation. 
@@ -113,34 +113,46 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   # For example, if you have 3 iterations with objectives 3, 1, 0.99999,
   # your should return fmin = 0.99999, and4 not have another iteration
   
-  # Return 
-  # beta - the solution (a vector)
-  # fmin - optimal function value (value of objective at beta, scalar)
+  n <- nXtilde # Number of samples
+  r <- Ytilde - as.vector(Xtilde %*% beta) # Current residual
+  # Objective function value for the initial value of beta
+  fmin_old <- lasso(Xtilde, Ytilde, beta, lambda) # obj_val(r, beta)
   
-  # Initial values for objective function, beta and threshold.
-  fmin_old <- lasso(Xtilde, Ytilde, beta_start, lambda)
-  beta <- beta_start
-  diff_obj <- eps + 1
-  
-  # While diff doesn't surpass threshold  
-  while (diff_obj >= eps){
-    
-    # Compute the coordinate descent for each entry in beta
-    for (i in 1:p){
-      beta[i] <- soft((1 / nXtilde) * crossprod(Xtilde[, i],
-                                                Ytilde - Xtilde[, -i, drop=FALSE] %*% beta[-i]),
-                      lambda)
-    }
-    
-    # Update values for the objective function and the difference with the former one
-    fmin <- lasso(Xtilde, Ytilde, beta, lambda)
-    diff_obj <- abs(fmin_old - fmin)
-    fmin_old <- fmin
-    
-  }
-  
-  return(list(beta = beta, fmin = fmin))
+  ## Number of maximum iterations for the coordinate training
+  #max_iter <- 1000L
+  #it <- 0L # Current iteration
+  #
+  ## Repeat the coordinate training until the maximum number of iterations has been completed or the threshold has been surpassed
+  #repeat {
+  #  it <- it + 1L # New iteration
+  #  
+  #  # Compute the coordinate descent for each entry in beta
+  #  for (j in 1:p){
+  #    xj <- Xtilde[, j] # Current column of the design matrix
+  #    # rho_j uses current residual; with standardization denom is n
+  #    rho_j <- sum(xj * (r + xj * beta[j])) / n # First argument in the soft function
+  #    lamj  <- if (length(lambda) == 1L) lambda else lambda[j] # Check the nature of lambda
+  #    
+  #    bj_new <- soft(rho_j, lamj) # Compute the new value of the j-th entry of beta
+  #    if (bj_new != beta[j]) {
+  #      r <- r - xj * (bj_new - beta[j]) # Update of the residual given the bj_new entry and xj column
+  #      beta[j] <- bj_new # Update the beta
+  #    }
+  #  }
+  #  
+  #  # Update values for the objective function and the difference with the former one.
+  #  fmin <- lasso(Xtilde, Ytilde, beta, lambda)
+  #  # Check if the threshold has been overcomed or the max_iter reached.
+  #  if ((fmin_old - fmin) < eps || it >= max_iter) break
+  #  fmin_old <- fmin
+  #}
+  #
+  ## Return 
+  ## beta - the solution (a vector)
+  ## fmin - optimal function value (value of objective at beta, scalar)
+  #return(list(beta = beta, fmin = fmin))
 }
+
 
 # [ToDo] Fit LASSO on standardized data for a sequence of lambda values. Sequential version of a previous function.
 # Xtilde - centered and scaled X, n x p
@@ -170,20 +182,22 @@ fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda
   # print the warning message and proceed as if the values were not supplied.
   
   # If lambda_seq is given
-  if (!is.null(lambda_seq)) {
+  user_supplied <- !is.null(lambda_seq)
+  if (user_supplied) {
     lambda_seq <- as.numeric(lambda_seq) # Check class of lambda_seq
     lambda_seq <- lambda_seq[lambda_seq >= 0] # Keep non-negative values
     lambda_seq <- sort(unique(lambda_seq), decreasing = TRUE) # Decreasing sort
     if (length(lambda_seq) == 0){ # If none lambda_seq is given
       warning('None of the supplied values satisfy the requirement')
-      given <- FALSE
+      user_supplied <- FALSE
     }
   }
+  
   
   # If lambda_seq is not supplied, calculate lambda_max 
   # (the minimal value of lambda that gives zero solution),
   # and create a sequence of length n_lambda as
-  if (!given) { # If none lambda_seq is given
+  if (!user_supplied) { # If none lambda_seq is given
     corr <- as.numeric(crossprod(Xtilde, Ytilde)) / n
     lambda_max <- max(abs(corr)) # Compute max lambda
     if (!is.finite(lambda_max) || lambda_max <= 0){
@@ -266,6 +280,7 @@ fitLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, eps = 0.001){
 }
 
 
+###### FALTA COMENTAR
 # [ToDo] Fit LASSO and perform cross-validation to select the best fit
 # X - n x p matrix of covariates
 # Y - n x 1 response vector
@@ -276,17 +291,60 @@ fitLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, eps = 0.001){
 # eps - precision level for convergence assessment, default 0.001
 cvLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, k = 5, fold_ids = NULL, eps = 0.001){
   # [ToDo] Fit Lasso on original data using fitLASSO
+  
+  # fitLASSO to the original data
+  full_fit <- fitLASSO(X, Y, lambda_seq = lambda_seq, n_lambda = n_lambda, eps = eps)
+  lambda_seq <- full_fit$lambda_seq
+  beta_mat <- full_fit$beta_mat
+  beta0_vec <- full_fit$beta0_vec
+  
+  n <- nrow(as.matrix(X)) # Number of samples
+  p <- ncol(as.matrix(X)) # Number of features
+  L <- length(lambda_seq) # Number of lambdas 
  
   # [ToDo] If fold_ids is NULL, split the data randomly into k folds.
   # If fold_ids is not NULL, split the data according to supplied fold_ids.
+  if (is.null(fold_ids)) {
+    fold_ids <- sample(rep(seq_len(k), length.out = n))
+  } 
+  else {
+    if (length(fold_ids) != n){
+      stop("fold_ids must have length n.")
+    }
+    fold_ids <- as.integer(fold_ids)
+    k <- max(fold_ids)
+  }
   
   # [ToDo] Calculate LASSO on each fold using fitLASSO,
   # and perform any additional calculations needed for CV(lambda) and SE_CV(lambda)
+  mse_mat <- matrix(NA_real_, nrow = L, ncol = k)  # rows: lambdas, cols: folds
+  
+  for (fold in seq_len(k)) {
+    idx_val <- which(fold_ids == fold)
+    idx_tr  <- setdiff(seq_len(n), idx_val)
+    
+    fit_k <- fitLASSO(X[idx_tr, , drop = FALSE], Y[idx_tr],
+                      lambda_seq = lambda_seq, n_lambda = n_lambda, eps = eps)
+    
+    Xv <- as.matrix(X[idx_val, , drop = FALSE]); yv <- as.numeric(Y[idx_val])
+    pred <- Xv %*% fit_k$beta_mat
+    pred <- sweep(pred, 2, fit_k$beta0_vec, "+")  # add intercepts
+    resid <- matrix(yv, nrow = length(yv), ncol = L) - pred
+    mse_mat[, fold] <- colMeans(resid^2)          # MSE per lambda for this fold
+  }
+  
+  cvm  <- rowMeans(mse_mat)                  # CV(lambda): average MSE over folds
+  cvse <- apply(mse_mat, 1, sd) / sqrt(k)    # SE_CV(lambda)
   
   # [ToDo] Find lambda_min
+  idx_min    <- which.min(cvm)
+  lambda_min <- lambda_seq[idx_min]
 
   # [ToDo] Find lambda_1SE
-  
+  thresh       <- cvm[idx_min] + cvse[idx_min]
+  candidates   <- which(cvm <= thresh)
+  # lambda_seq is sorted from largest to smallest; pick the largest lambda within 1SE
+  lambda_1se   <- lambda_seq[min(candidates)]
   
   # Return output
   # Output from fitLASSO on the whole data
