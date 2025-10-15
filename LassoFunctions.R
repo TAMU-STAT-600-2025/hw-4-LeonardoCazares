@@ -151,28 +151,69 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
 # eps - precision level for convergence assessment, default 0.001
 fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda = 60, eps = 0.001){
   # [ToDo] Check that n is the same between Xtilde and Ytilde
- 
-  # [ToDo] Check for the user-supplied lambda-seq (see below)
-  # If lambda_seq is supplied, only keep values that are >= 0,
-  # and make sure the values are sorted from largest to smallest.
-  # If none of the supplied values satisfy the requirement,
-  # print the warning message and proceed as if the values were not supplied.
   
+  # Check class correctness
+  Xtilde <- as.matrix(Xtilde)
+  Ytilde <- as.numeric(Ytilde)
   
-  # If lambda_seq is not supplied, calculate lambda_max 
-  # (the minimal value of lambda that gives zero solution),
-  # and create a sequence of length n_lambda as
-  lambda_seq = exp(seq(log(lambda_max), log(0.01), length = n_lambda))
-  
-  # [ToDo] Apply fitLASSOstandardized going from largest to smallest lambda 
-  # (make sure supplied eps is carried over). 
-  # Use warm starts strategy discussed in class for setting the starting values.
-  
-  # Return output
-  # lambda_seq - the actual sequence of tuning parameters used
-  # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value
-  # fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
-  return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, fmin_vec = fmin_vec))
+  ## Get Xtilde dimentions and check compatibility
+  #n <- nrow(Xtilde)
+  #p <- ncol(Xtilde)
+  #if (length(Ytilde) != n){
+  #  stop('Xtilde and Ytilde have different n')
+  #}
+ #
+  ## [ToDo] Check for the user-supplied lambda-seq (see below)
+  ## If lambda_seq is supplied, only keep values that are >= 0,
+  ## and make sure the values are sorted from largest to smallest.
+  ## If none of the supplied values satisfy the requirement,
+  ## print the warning message and proceed as if the values were not supplied.
+  #
+  ## If lambda_seq is given
+  #if (!is.null(lambda_seq)) {
+  #  lambda_seq <- as.numeric(lambda_seq) # Check class of lambda_seq
+  #  lambda_seq <- lambda_seq[lambda_seq >= 0] # Keep non-negative values
+  #  lambda_seq <- sort(unique(lambda_seq), decreasing = TRUE) # Decreasing sort
+  #  if (length(lambda_seq) == 0){ # If none lambda_seq is given
+  #    warning('None of the supplied values satisfy the requirement')
+  #    given <- FALSE
+  #  }
+  #}
+  #
+  ## If lambda_seq is not supplied, calculate lambda_max 
+  ## (the minimal value of lambda that gives zero solution),
+  ## and create a sequence of length n_lambda as
+  #if (!given) { # If none lambda_seq is given
+  #  corr <- as.numeric(crossprod(Xtilde, Ytilde)) / n
+  #  lambda_max <- max(abs(corr)) # Compute max lambda
+  #  if (!is.finite(lambda_max) || lambda_max <= 0){
+  #    lambda_max <- 1e-8 # In case the lambda_max is non-positive or infinite
+  #  }
+  #  lambda_seq <- exp(seq(log(lambda_max), log(0.01), length = n_lambda)) # Use the given hint
+  #  lambda_seq <- sort(lambda_seq, decreasing = TRUE) # Sort
+  #}
+  #
+  ## [ToDo] Apply fitLASSOstandardized going from largest to smallest lambda 
+  ## (make sure supplied eps is carried over). 
+  ## Use warm starts strategy discussed in class for setting the starting values.
+  #L <- length(lambda_seq) # Number of lambdas
+  #beta_mat <- matrix(0, nrow = p, ncol = L) # Matrix for betas
+  #fmin_vec <- numeric(L) # Vector for objective function
+  #
+  #beta_start <- rep(0, p)  # warm start for the first (largest) lambda
+  #for (k in seq_len(L)) {
+  #  fit <- fitLASSOstandardized(Xtilde, Ytilde, lambda = lambda_seq[k],
+  #                              beta_start = beta_start, eps = eps) # Apply fitLASSOstandardized for different lambdas
+  #  beta_mat[, k] <- fit$beta # Keep optimized beta
+  #  fmin_vec[k] <- fit$fmin # Keep current objective function
+  #  beta_start <- fit$beta  # Warm start for the next lambda
+  #}
+  #
+  ## Return output
+  ## lambda_seq - the actual sequence of tuning parameters used
+  ## beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value
+  ## fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
+  #return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, fmin_vec = fmin_vec))
 }
 
 # [ToDo] Fit LASSO on original data using a sequence of lambda values
