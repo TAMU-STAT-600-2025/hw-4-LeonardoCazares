@@ -233,26 +233,36 @@ fitLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, eps = 0.001){
   weights <- std$weights # Sample Std for each colum of centered X
   p <- ncol(Xtilde) # Number of features in data
   
-  # [ToDo] Fit Lasso on a sequence of values using fitLASSOstandardized_seq
-  # (make sure the parameters carry over)
-  
-  # Apply fitLASSOstandardized_seq to the data
-  fit_seq <- fitLASSOstandardized_seq(
-    Xtilde = Xtilde,
-    Ytilde = Ytilde,
-    lambda_seq = lambda_seq,
-    n_lambda = n_lambda,
-    eps = eps
-  )
- 
-  # [ToDo] Perform back scaling and centering to get original intercept and coefficient vector
-  # for each lambda
-  
-  # Return output
-  # lambda_seq - the actual sequence of tuning parameters used
-  # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
-  # beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale)
-  return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec))
+  ## [ToDo] Fit Lasso on a sequence of values using fitLASSOstandardized_seq
+  ## (make sure the parameters carry over)
+  #
+  ## Apply fitLASSOstandardized_seq to the data
+  #fit_seq <- fitLASSOstandardized_seq(
+  #  Xtilde = Xtilde,
+  #  Ytilde = Ytilde,
+  #  lambda_seq = lambda_seq,
+  #  n_lambda = n_lambda,
+  #  eps = eps
+  #)
+  #lambda_seq <- fit_seq$lambda_seq # Sequence of lambdas
+  #beta_std <- fit_seq$beta_mat # p x L, coefficients for standardized X
+ #
+  ## [ToDo] Perform back scaling and centering to get original intercept and coefficient vector
+  ## for each lambda
+  #
+  #L <- length(lambda_seq) # Number of lambda functions
+  #beta_mat <- matrix(0, nrow = p, ncol = L) # A matrix for each beta 
+  #nz <- weights > 0 # Keep cases where
+  #if (any(nz)) {
+  #  beta_mat[nz, ] <- sweep(beta_std[nz, , drop = FALSE], 1, weights[nz], "/")
+  #}
+  #beta0_vec <- as.numeric(Ymean - crossprod(Xmeans, beta_mat))
+  #
+  ## Return output
+  ## lambda_seq - the actual sequence of tuning parameters used
+  ## beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
+  ## beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale)
+  #return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec))
 }
 
 
