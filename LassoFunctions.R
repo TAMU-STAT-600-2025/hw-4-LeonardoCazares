@@ -224,9 +224,26 @@ fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda
 # eps - precision level for convergence assessment, default 0.001
 fitLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, eps = 0.001){
   # [ToDo] Center and standardize X,Y based on standardizeXY function
- 
+  
+  std <- standardizeXY(X, Y) # Standardize data
+  Xtilde  <- std$Xtilde # Centered and normalized X
+  Ytilde  <- std$Ytilde # Centerd Y
+  Xmeans  <- std$Xmeans # Means for X
+  Ymean   <- std$Ymean # Mean for Y
+  weights <- std$weights # Sample Std for each colum of centered X
+  p <- ncol(Xtilde) # Number of features in data
+  
   # [ToDo] Fit Lasso on a sequence of values using fitLASSOstandardized_seq
   # (make sure the parameters carry over)
+  
+  # Apply fitLASSOstandardized_seq to the data
+  #fit_seq <- fitLASSOstandardized_seq(
+  #  Xtilde = Xtilde,
+  #  Ytilde = Ytilde,
+  #  lambda_seq = lambda_seq,
+  #  n_lambda = n_lambda,
+  #  eps = eps
+  #)
  
   # [ToDo] Perform back scaling and centering to get original intercept and coefficient vector
   # for each lambda
