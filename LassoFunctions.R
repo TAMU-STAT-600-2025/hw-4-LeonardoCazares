@@ -122,10 +122,10 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   max_iter <- 1000L
   it <- 0L # Current iteration
   
-  ## Repeat the coordinate training until the maximum number of iterations has been completed or the threshold has been surpassed
-  #repeat {
-  #  it <- it + 1L # New iteration
-  #  
+  # Repeat the coordinate training until the maximum number of iterations has been completed or the threshold has been surpassed
+  repeat {
+    it <- it + 1L # New iteration
+    
   #  # Compute the coordinate descent for each entry in beta
   #  for (j in 1:p){
   #    xj <- Xtilde[, j] # Current column of the design matrix
