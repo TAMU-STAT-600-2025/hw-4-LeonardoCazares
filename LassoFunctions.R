@@ -126,13 +126,13 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   repeat {
     it <- it + 1L # New iteration
     
-  #  # Compute the coordinate descent for each entry in beta
-  #  for (j in 1:p){
-  #    xj <- Xtilde[, j] # Current column of the design matrix
-  #    # rho_j uses current residual; with standardization denom is n
-  #    rho_j <- sum(xj * (r + xj * beta[j])) / n # First argument in the soft function
-  #    lamj  <- if (length(lambda) == 1L) lambda else lambda[j] # Check the nature of lambda
-  #    
+    # Compute the coordinate descent for each entry in beta
+    for (j in 1:p){
+      xj <- Xtilde[, j] # Current column of the design matrix
+      # rho_j uses current residual; with standardization denom is n
+      rho_j <- sum(xj * (r + xj * beta[j])) / n # First argument in the soft function
+      lamj  <- if (length(lambda) == 1L) lambda else lambda[j] # Check the nature of lambda
+      
   #    bj_new <- soft(rho_j, lamj) # Compute the new value of the j-th entry of beta
   #    if (bj_new != beta[j]) {
   #      r <- r - xj * (bj_new - beta[j]) # Update of the residual given the bj_new entry and xj column
