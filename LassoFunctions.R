@@ -209,11 +209,11 @@ fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda
     beta_start <- fit$beta  # Warm start for the next lambda
   }
   
-  ## Return output
-  ## lambda_seq - the actual sequence of tuning parameters used
-  ## beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value
-  ## fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
-  #return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, fmin_vec = fmin_vec))
+  # Return output
+  # lambda_seq - the actual sequence of tuning parameters used
+  # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value
+  # fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
+  return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, fmin_vec = fmin_vec))
 }
 
 # [ToDo] Fit LASSO on original data using a sequence of lambda values
