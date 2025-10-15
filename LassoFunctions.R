@@ -237,13 +237,13 @@ fitLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, eps = 0.001){
   # (make sure the parameters carry over)
   
   # Apply fitLASSOstandardized_seq to the data
-  #fit_seq <- fitLASSOstandardized_seq(
-  #  Xtilde = Xtilde,
-  #  Ytilde = Ytilde,
-  #  lambda_seq = lambda_seq,
-  #  n_lambda = n_lambda,
-  #  eps = eps
-  #)
+  fit_seq <- fitLASSOstandardized_seq(
+    Xtilde = Xtilde,
+    Ytilde = Ytilde,
+    lambda_seq = lambda_seq,
+    n_lambda = n_lambda,
+    eps = eps
+  )
  
   # [ToDo] Perform back scaling and centering to get original intercept and coefficient vector
   # for each lambda
