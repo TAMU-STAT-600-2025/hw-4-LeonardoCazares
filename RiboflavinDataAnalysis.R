@@ -52,24 +52,23 @@ cat("Median time (seconds):", round(median_sec, 4), "\n")
 set.seed(2025)  # CV folds randomized
 cv30 <- cvLASSO(X, Y, n_lambda = 30, k = 5, eps = 0.001) # (5-folds and 30 lambdas)
 
-## [ToDo] Based on the above output, plot the value of CV(lambda) versus tuning parameter. Note that this will change with each run since the folds are random, this is ok.
-#
-## Plot CV vs. lambda
-#plot(cv30$lambda_seq, cv30$cvm, type = "b",
-#     xlab = "lambda", ylab = "CV-MSE",
-#     main = "CV curve for LASSO on riboflavin (k=5)")
-#
-## Get confidence intervals
-#arrows(cv30$lambda_seq, cv30$cvm - cv30$cvse,
-#       cv30$lambda_seq, cv30$cvm + cv30$cvse,
-#       angle = 90, code = 3, length = 0.05)
-#
-## Plot the lambda_min
-#abline(v = cv30$lambda_min, col = "red", lty = 2)
-#
-## Plot the bigger lambda that satisfies CV(lambda) <= CV(lambda_min) + CV_SE
-#abline(v = cv30$lambda_1se, col = "blue", lty = 3)
-#legend("topright",
-#       legend = c(expression(lambda[min]), expression(lambda[1*"SE"])),
-#       lty = c(2,3), col = c("red","blue"), bty = "n")
-#
+# [ToDo] Based on the above output, plot the value of CV(lambda) versus tuning parameter. Note that this will change with each run since the folds are random, this is ok.
+
+# Plot CV vs. lambda
+plot(cv30$lambda_seq, cv30$cvm, type = "b",
+     xlab = "lambda", ylab = "CV-MSE",
+     main = "CV curve for LASSO on riboflavin (k=5)")
+
+# Get confidence intervals
+arrows(cv30$lambda_seq, cv30$cvm - cv30$cvse,
+       cv30$lambda_seq, cv30$cvm + cv30$cvse,
+       angle = 90, code = 3, length = 0.05)
+
+# Plot the lambda_min
+abline(v = cv30$lambda_min, col = "red", lty = 2)
+
+# Plot the bigger lambda that satisfies CV(lambda) <= CV(lambda_min) + CV_SE
+abline(v = cv30$lambda_1se, col = "blue", lty = 3)
+legend("topright",
+       legend = c(expression(lambda[min]), expression(lambda[1*"SE"])),
+       lty = c(2,3), col = c("red","blue"), bty = "n")
