@@ -24,12 +24,12 @@ lambda_seq <- fit60$lambda_seq # Get the lambdas
 beta_mat   <- fit60$beta_mat # Get the betas
 beta0_vec  <- fit60$beta0_vec # # Get the interceptions
 
-## [ToDo] Based on the above output, plot the number of non-zero elements in each beta versus the value of tuning parameter
-#nnz <- colSums(beta_mat != 0)
-#plot(lambda_seq, nnz, type = "b",
-#     xlab = "lambda", ylab = "Number of nonzeros in beta",
-#     main = "LASSO sparsity path on riboflavin")
-#
+# [ToDo] Based on the above output, plot the number of non-zero elements in each beta versus the value of tuning parameter
+nnz <- colSums(beta_mat != 0)
+plot(lambda_seq, nnz, type = "b",
+     xlab = "lambda", ylab = "Number of nonzeros in beta",
+     main = "LASSO sparsity path on riboflavin")
+
 ## [ToDo] Use microbenchmark 10 times to check the timing of your fitLASSO function above with 60 tuning parameters
 #library(microbenchmark) # Import microbenchmark
 #set.seed(2025)
