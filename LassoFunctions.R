@@ -118,10 +118,10 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
   # Objective function value for the initial value of beta
   fmin_old <- lasso(Xtilde, Ytilde, beta, lambda) # obj_val(r, beta)
   
-  ## Number of maximum iterations for the coordinate training
-  #max_iter <- 1000L
-  #it <- 0L # Current iteration
-  #
+  # Number of maximum iterations for the coordinate training
+  max_iter <- 1000L
+  it <- 0L # Current iteration
+  
   ## Repeat the coordinate training until the maximum number of iterations has been completed or the threshold has been surpassed
   #repeat {
   #  it <- it + 1L # New iteration
