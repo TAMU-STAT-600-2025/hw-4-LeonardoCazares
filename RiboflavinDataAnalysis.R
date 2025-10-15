@@ -1,11 +1,11 @@
 # Load the riboflavin data
 
-# Uncomment below to install hdi package if you don't have it already; 
-# install.packages("hdi") 
+# Uncomment below to install hdi package if you don't have it already;
+# install.packages("hdi")
 library(hdi)
 data(riboflavin) # this puts list with name riboflavin into the R environment, y - outcome, x - gene expression
 dim(riboflavin$x) # n = 71 samples by p = 4088 predictors
-?riboflavin # this gives you more information on the dataset
+? riboflavin # this gives you more information on the dataset
 
 # This is to make sure riboflavin$x can be converted and treated as matrix for faster computations
 class(riboflavin$x) <- class(riboflavin$x)[-match("AsIs", class(riboflavin$x))]
@@ -26,9 +26,14 @@ beta0_vec  <- fit60$beta0_vec # # Get the interceptions
 
 # [ToDo] Based on the above output, plot the number of non-zero elements in each beta versus the value of tuning parameter
 nnz <- colSums(beta_mat != 0)
-plot(lambda_seq, nnz, type = "b",
-     xlab = "lambda", ylab = "Number of nonzeros in beta",
-     main = "LASSO sparsity path on riboflavin")
+plot(
+  lambda_seq,
+  nnz,
+  type = "b",
+  xlab = "lambda",
+  ylab = "Number of nonzeros in beta",
+  main = "LASSO sparsity path on riboflavin"
+)
 
 # [ToDo] Use microbenchmark 10 times to check the timing of your fitLASSO function above with 60 tuning parameters
 library(microbenchmark) # Import microbenchmark
@@ -50,25 +55,48 @@ cat("Median time (seconds):", round(median_sec, 4), "\n")
 # [ToDo] Use cvLASSO function on the riboflavin data with 30 tuning parameters (just 30 to make it faster)
 
 set.seed(2025)  # CV folds randomized
-cv30 <- cvLASSO(X, Y, n_lambda = 30, k = 5, eps = 0.001) # (5-folds and 30 lambdas)
+cv30 <- cvLASSO(X,
+                Y,
+                n_lambda = 30,
+                k = 5,
+                eps = 0.001) # (5-folds and 30 lambdas)
 
 # [ToDo] Based on the above output, plot the value of CV(lambda) versus tuning parameter. Note that this will change with each run since the folds are random, this is ok.
 
 # Plot CV vs. lambda
-plot(cv30$lambda_seq, cv30$cvm, type = "b",
-     xlab = "lambda", ylab = "CV-MSE",
-     main = "CV curve for LASSO on riboflavin (k=5)")
+plot(
+  cv30$lambda_seq,
+  cv30$cvm,
+  type = "b",
+  xlab = "lambda",
+  ylab = "CV-MSE",
+  main = "CV curve for LASSO on riboflavin (k=5)"
+)
 
 # Get confidence intervals
-arrows(cv30$lambda_seq, cv30$cvm - cv30$cvse,
-       cv30$lambda_seq, cv30$cvm + cv30$cvse,
-       angle = 90, code = 3, length = 0.05)
+arrows(
+  cv30$lambda_seq,
+  cv30$cvm - cv30$cvse,
+  cv30$lambda_seq,
+  cv30$cvm + cv30$cvse,
+  angle = 90,
+  code = 3,
+  length = 0.05
+)
 
 # Plot the lambda_min
-abline(v = cv30$lambda_min, col = "red", lty = 2)
+abline(v = cv30$lambda_min,
+       col = "red",
+       lty = 2)
 
 # Plot the bigger lambda that satisfies CV(lambda) <= CV(lambda_min) + CV_SE
-abline(v = cv30$lambda_1se, col = "blue", lty = 3)
-legend("topright",
-       legend = c(expression(lambda[min]), expression(lambda[1*"SE"])),
-       lty = c(2,3), col = c("red","blue"), bty = "n")
+abline(v = cv30$lambda_1se,
+       col = "blue",
+       lty = 3)
+legend(
+  "topright",
+  legend = c(expression(lambda[min]), expression(lambda[1 * "SE"])),
+  lty = c(2, 3),
+  col = c("red", "blue"),
+  bty = "n"
+)
