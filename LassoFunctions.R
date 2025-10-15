@@ -302,31 +302,31 @@ cvLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, k = 5, fold_ids = NU
   p <- ncol(as.matrix(X)) # Number of features
   L <- length(lambda_seq) # Number of lambdas 
  
-  ## [ToDo] If fold_ids is NULL, split the data randomly into k folds.
-  ## If fold_ids is not NULL, split the data according to supplied fold_ids.
-  #if (is.null(fold_ids)) {
-  #  fold_ids <- sample(rep(seq_len(k), length.out = n)) # If fold_ids is NULL create random k-fold indexes
-  #} 
-  #else {
-  #  if (length(fold_ids) != n){
-  #    stop("fold_ids must have length n.") # Not all samples can be covered within at least one k-fold
-  #  }
-  #  fold_ids <- as.integer(fold_ids) # Verify numeric folds
-  #  k <- max(fold_ids) # Get number of folds (k folds)
-  #}
-  #
-  ## [ToDo] Calculate LASSO on each fold using fitLASSO,
-  ## and perform any additional calculations needed for CV(lambda) and SE_CV(lambda)
-  #mse_mat <- matrix(NA_real_, nrow = L, ncol = k)  # MSE matrix for each L value (row) and k value (column).
-  #
-  #for (fold in seq_len(k)) {
-  #  idx_val <- which(fold_ids == fold) # Get the indexes that belongs to the the current fold
-  #  idx_tr  <- setdiff(seq_len(n), idx_val) # Get the rest of indexes for training
-  #  
-  #  # Train fitLASSO on the remaining data
-  #  fit_k <- fitLASSO(X[idx_tr, , drop = FALSE], Y[idx_tr],
-  #                    lambda_seq = lambda_seq, n_lambda = n_lambda, eps = eps)
-  #  
+  # [ToDo] If fold_ids is NULL, split the data randomly into k folds.
+  # If fold_ids is not NULL, split the data according to supplied fold_ids.
+  if (is.null(fold_ids)) {
+    fold_ids <- sample(rep(seq_len(k), length.out = n)) # If fold_ids is NULL create random k-fold indexes
+  } 
+  else {
+    if (length(fold_ids) != n){
+      stop("fold_ids must have length n.") # Not all samples can be covered within at least one k-fold
+    }
+    fold_ids <- as.integer(fold_ids) # Verify numeric folds
+    k <- max(fold_ids) # Get number of folds (k folds)
+  }
+  
+  # [ToDo] Calculate LASSO on each fold using fitLASSO,
+  # and perform any additional calculations needed for CV(lambda) and SE_CV(lambda)
+  mse_mat <- matrix(NA_real_, nrow = L, ncol = k)  # MSE matrix for each L value (row) and k value (column).
+  
+  for (fold in seq_len(k)) {
+    idx_val <- which(fold_ids == fold) # Get the indexes that belongs to the the current fold
+    idx_tr  <- setdiff(seq_len(n), idx_val) # Get the rest of indexes for training
+    
+    # Train fitLASSO on the remaining data
+    fit_k <- fitLASSO(X[idx_tr, , drop = FALSE], Y[idx_tr],
+                      lambda_seq = lambda_seq, n_lambda = n_lambda, eps = eps)
+    
   #  Xv <- as.matrix(X[idx_val, , drop = FALSE]) # Test data X
   #  yv <- as.numeric(Y[idx_val]) # Test data Y
   #  pred <- Xv %*% fit_k$beta_mat # Prediction on the test data
