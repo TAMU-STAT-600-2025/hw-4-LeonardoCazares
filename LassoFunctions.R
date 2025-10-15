@@ -233,20 +233,20 @@ fitLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, eps = 0.001){
   weights <- std$weights # Sample Std for each colum of centered X
   p <- ncol(Xtilde) # Number of features in data
   
-  ## [ToDo] Fit Lasso on a sequence of values using fitLASSOstandardized_seq
-  ## (make sure the parameters carry over)
-  #
-  ## Apply fitLASSOstandardized_seq to the data
-  #fit_seq <- fitLASSOstandardized_seq(
-  #  Xtilde = Xtilde,
-  #  Ytilde = Ytilde,
-  #  lambda_seq = lambda_seq,
-  #  n_lambda = n_lambda,
-  #  eps = eps
-  #)
-  #lambda_seq <- fit_seq$lambda_seq # Sequence of lambdas
-  #beta_std <- fit_seq$beta_mat # p x L, coefficients for standardized X
- #
+  # [ToDo] Fit Lasso on a sequence of values using fitLASSOstandardized_seq
+  # (make sure the parameters carry over)
+  
+  # Apply fitLASSOstandardized_seq to the data
+  fit_seq <- fitLASSOstandardized_seq(
+    Xtilde = Xtilde,
+    Ytilde = Ytilde,
+    lambda_seq = lambda_seq,
+    n_lambda = n_lambda,
+    eps = eps
+  )
+  lambda_seq <- fit_seq$lambda_seq # Sequence of lambdas
+  beta_std <- fit_seq$beta_mat # p x L, coefficients for standardized X
+ 
   ## [ToDo] Perform back scaling and centering to get original intercept and coefficient vector
   ## for each lambda
   #
