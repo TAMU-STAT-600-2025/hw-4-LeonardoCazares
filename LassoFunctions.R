@@ -163,23 +163,23 @@ fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda
     stop('Xtilde and Ytilde have different n')
   }
  
-  ## [ToDo] Check for the user-supplied lambda-seq (see below)
-  ## If lambda_seq is supplied, only keep values that are >= 0,
-  ## and make sure the values are sorted from largest to smallest.
-  ## If none of the supplied values satisfy the requirement,
-  ## print the warning message and proceed as if the values were not supplied.
-  #
-  ## If lambda_seq is given
-  #if (!is.null(lambda_seq)) {
-  #  lambda_seq <- as.numeric(lambda_seq) # Check class of lambda_seq
-  #  lambda_seq <- lambda_seq[lambda_seq >= 0] # Keep non-negative values
-  #  lambda_seq <- sort(unique(lambda_seq), decreasing = TRUE) # Decreasing sort
-  #  if (length(lambda_seq) == 0){ # If none lambda_seq is given
-  #    warning('None of the supplied values satisfy the requirement')
-  #    given <- FALSE
-  #  }
-  #}
-  #
+  # [ToDo] Check for the user-supplied lambda-seq (see below)
+  # If lambda_seq is supplied, only keep values that are >= 0,
+  # and make sure the values are sorted from largest to smallest.
+  # If none of the supplied values satisfy the requirement,
+  # print the warning message and proceed as if the values were not supplied.
+  
+  # If lambda_seq is given
+  if (!is.null(lambda_seq)) {
+    lambda_seq <- as.numeric(lambda_seq) # Check class of lambda_seq
+    lambda_seq <- lambda_seq[lambda_seq >= 0] # Keep non-negative values
+    lambda_seq <- sort(unique(lambda_seq), decreasing = TRUE) # Decreasing sort
+    if (length(lambda_seq) == 0){ # If none lambda_seq is given
+      warning('None of the supplied values satisfy the requirement')
+      given <- FALSE
+    }
+  }
+  
   ## If lambda_seq is not supplied, calculate lambda_max 
   ## (the minimal value of lambda that gives zero solution),
   ## and create a sequence of length n_lambda as
