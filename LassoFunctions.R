@@ -140,17 +140,17 @@ fitLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps 
       }
     }
     
-  #  # Update values for the objective function and the difference with the former one.
-  #  fmin <- lasso(Xtilde, Ytilde, beta, lambda)
-  #  # Check if the threshold has been overcomed or the max_iter reached.
-  #  if ((fmin_old - fmin) < eps || it >= max_iter) break
-  #  fmin_old <- fmin
-  #}
-  #
-  ## Return 
-  ## beta - the solution (a vector)
-  ## fmin - optimal function value (value of objective at beta, scalar)
-  #return(list(beta = beta, fmin = fmin))
+    # Update values for the objective function and the difference with the former one.
+    fmin <- lasso(Xtilde, Ytilde, beta, lambda)
+    # Check if the threshold has been overcomed or the max_iter reached.
+    if ((fmin_old - fmin) < eps || it >= max_iter) break
+    fmin_old <- fmin
+  }
+  
+  # Return 
+  # beta - the solution (a vector)
+  # fmin - optimal function value (value of objective at beta, scalar)
+  return(list(beta = beta, fmin = fmin))
 }
 
 
