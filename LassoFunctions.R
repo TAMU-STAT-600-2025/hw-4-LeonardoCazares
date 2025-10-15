@@ -302,60 +302,62 @@ cvLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, k = 5, fold_ids = NU
   p <- ncol(as.matrix(X)) # Number of features
   L <- length(lambda_seq) # Number of lambdas 
  
-  # [ToDo] If fold_ids is NULL, split the data randomly into k folds.
-  # If fold_ids is not NULL, split the data according to supplied fold_ids.
-  if (is.null(fold_ids)) {
-    fold_ids <- sample(rep(seq_len(k), length.out = n))
-  } 
-  else {
-    if (length(fold_ids) != n){
-      stop("fold_ids must have length n.")
-    }
-    fold_ids <- as.integer(fold_ids)
-    k <- max(fold_ids)
-  }
-  
-  # [ToDo] Calculate LASSO on each fold using fitLASSO,
-  # and perform any additional calculations needed for CV(lambda) and SE_CV(lambda)
-  mse_mat <- matrix(NA_real_, nrow = L, ncol = k)  # rows: lambdas, cols: folds
-  
-  for (fold in seq_len(k)) {
-    idx_val <- which(fold_ids == fold)
-    idx_tr  <- setdiff(seq_len(n), idx_val)
-    
-    fit_k <- fitLASSO(X[idx_tr, , drop = FALSE], Y[idx_tr],
-                      lambda_seq = lambda_seq, n_lambda = n_lambda, eps = eps)
-    
-    Xv <- as.matrix(X[idx_val, , drop = FALSE]); yv <- as.numeric(Y[idx_val])
-    pred <- Xv %*% fit_k$beta_mat
-    pred <- sweep(pred, 2, fit_k$beta0_vec, "+")  # add intercepts
-    resid <- matrix(yv, nrow = length(yv), ncol = L) - pred
-    mse_mat[, fold] <- colMeans(resid^2)          # MSE per lambda for this fold
-  }
-  
-  cvm  <- rowMeans(mse_mat)                  # CV(lambda): average MSE over folds
-  cvse <- apply(mse_mat, 1, sd) / sqrt(k)    # SE_CV(lambda)
-  
-  # [ToDo] Find lambda_min
-  idx_min    <- which.min(cvm)
-  lambda_min <- lambda_seq[idx_min]
-
-  # [ToDo] Find lambda_1SE
-  thresh       <- cvm[idx_min] + cvse[idx_min]
-  candidates   <- which(cvm <= thresh)
-  # lambda_seq is sorted from largest to smallest; pick the largest lambda within 1SE
-  lambda_1se   <- lambda_seq[min(candidates)]
-  
-  # Return output
-  # Output from fitLASSO on the whole data
-  # lambda_seq - the actual sequence of tuning parameters used
-  # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
-  # beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale)
-  # fold_ids - used splitting into folds from 1 to k (either as supplied or as generated in the beginning)
-  # lambda_min - selected lambda based on minimal rule
-  # lambda_1se - selected lambda based on 1SE rule
-  # cvm - values of CV(lambda) for each lambda
-  # cvse - values of SE_CV(lambda) for each lambda
-  return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec, fold_ids = fold_ids, lambda_min = lambda_min, lambda_1se = lambda_1se, cvm = cvm, cvse = cvse))
+  ## [ToDo] If fold_ids is NULL, split the data randomly into k folds.
+  ## If fold_ids is not NULL, split the data according to supplied fold_ids.
+  #if (is.null(fold_ids)) {
+  #  fold_ids <- sample(rep(seq_len(k), length.out = n)) # If fold_ids is NULL create random k-fold indexes
+  #} 
+  #else {
+  #  if (length(fold_ids) != n){
+  #    stop("fold_ids must have length n.") # Not all samples can be covered within at least one k-fold
+  #  }
+  #  fold_ids <- as.integer(fold_ids) # Verify numeric folds
+  #  k <- max(fold_ids) # Get number of folds (k folds)
+  #}
+  #
+  ## [ToDo] Calculate LASSO on each fold using fitLASSO,
+  ## and perform any additional calculations needed for CV(lambda) and SE_CV(lambda)
+  #mse_mat <- matrix(NA_real_, nrow = L, ncol = k)  # MSE matrix for each L value (row) and k value (column).
+  #
+  #for (fold in seq_len(k)) {
+  #  idx_val <- which(fold_ids == fold) # Get the indexes that belongs to the the current fold
+  #  idx_tr  <- setdiff(seq_len(n), idx_val) # Get the rest of indexes for training
+  #  
+  #  # Train fitLASSO on the remaining data
+  #  fit_k <- fitLASSO(X[idx_tr, , drop = FALSE], Y[idx_tr],
+  #                    lambda_seq = lambda_seq, n_lambda = n_lambda, eps = eps)
+  #  
+  #  Xv <- as.matrix(X[idx_val, , drop = FALSE]) # Test data X
+  #  yv <- as.numeric(Y[idx_val]) # Test data Y
+  #  pred <- Xv %*% fit_k$beta_mat # Prediction on the test data
+  #  pred <- sweep(pred, 2, fit_k$beta0_vec, "+") # Add intercept terms
+  #  resid <- matrix(yv, nrow = length(yv), ncol = L) - pred # Differences between preds. and ground truth
+  #  mse_mat[, fold] <- colMeans(resid^2) # MSE per lambda for this fold
+  #}
+  #
+  #cvm  <- rowMeans(mse_mat) # CV(lambda), i.e. average MSE over folds
+  #cvse <- apply(mse_mat, 1, sd) / sqrt(k) # SE_CV(lambda), i.a. std among CV(lambda)
+  #
+  ## [ToDo] Find lambda_min
+  #idx_min <- which.min(cvm)
+  #lambda_min <- lambda_seq[idx_min] # Choose the lambda with the smalles CV(lambda)
+#
+  ## [ToDo] Find lambda_1SE
+  #thresh <- cvm[idx_min] + cvse[idx_min] # Mean CV(\lambda_{min}) plus the it's std.
+  #candidates <- which(cvm <= thresh) # Lambdas with a smaller CV(lambda)
+  ## lambda_seq is sorted from largest to smallest; pick the largest lambda within 1SE
+  #lambda_1se <- lambda_seq[min(candidates)]
+  #
+  ## Return output
+  ## Output from fitLASSO on the whole data
+  ## lambda_seq - the actual sequence of tuning parameters used
+  ## beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
+  ## beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale)
+  ## fold_ids - used splitting into folds from 1 to k (either as supplied or as generated in the beginning)
+  ## lambda_min - selected lambda based on minimal rule
+  ## lambda_1se - selected lambda based on 1SE rule
+  ## cvm - values of CV(lambda) for each lambda
+  ## cvse - values of SE_CV(lambda) for each lambda
+  #return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec, fold_ids = fold_ids, lambda_min = lambda_min, lambda_1se = lambda_1se, cvm = cvm, cvse = cvse))
 }
 
