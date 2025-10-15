@@ -180,19 +180,19 @@ fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda
     }
   }
   
-  ## If lambda_seq is not supplied, calculate lambda_max 
-  ## (the minimal value of lambda that gives zero solution),
-  ## and create a sequence of length n_lambda as
-  #if (!given) { # If none lambda_seq is given
-  #  corr <- as.numeric(crossprod(Xtilde, Ytilde)) / n
-  #  lambda_max <- max(abs(corr)) # Compute max lambda
-  #  if (!is.finite(lambda_max) || lambda_max <= 0){
-  #    lambda_max <- 1e-8 # In case the lambda_max is non-positive or infinite
-  #  }
-  #  lambda_seq <- exp(seq(log(lambda_max), log(0.01), length = n_lambda)) # Use the given hint
-  #  lambda_seq <- sort(lambda_seq, decreasing = TRUE) # Sort
-  #}
-  #
+  # If lambda_seq is not supplied, calculate lambda_max 
+  # (the minimal value of lambda that gives zero solution),
+  # and create a sequence of length n_lambda as
+  if (!given) { # If none lambda_seq is given
+    corr <- as.numeric(crossprod(Xtilde, Ytilde)) / n
+    lambda_max <- max(abs(corr)) # Compute max lambda
+    if (!is.finite(lambda_max) || lambda_max <= 0){
+      lambda_max <- 1e-8 # In case the lambda_max is non-positive or infinite
+    }
+    lambda_seq <- exp(seq(log(lambda_max), log(0.01), length = n_lambda)) # Use the given hint
+    lambda_seq <- sort(lambda_seq, decreasing = TRUE) # Sort
+  }
+  
   ## [ToDo] Apply fitLASSOstandardized going from largest to smallest lambda 
   ## (make sure supplied eps is carried over). 
   ## Use warm starts strategy discussed in class for setting the starting values.
