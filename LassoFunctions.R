@@ -156,13 +156,13 @@ fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda
   Xtilde <- as.matrix(Xtilde)
   Ytilde <- as.numeric(Ytilde)
   
-  ## Get Xtilde dimentions and check compatibility
-  #n <- nrow(Xtilde)
-  #p <- ncol(Xtilde)
-  #if (length(Ytilde) != n){
-  #  stop('Xtilde and Ytilde have different n')
-  #}
- #
+  # Get Xtilde dimentions and check compatibility
+  n <- nrow(Xtilde)
+  p <- ncol(Xtilde)
+  if (length(Ytilde) != n){
+    stop('Xtilde and Ytilde have different n')
+  }
+ 
   ## [ToDo] Check for the user-supplied lambda-seq (see below)
   ## If lambda_seq is supplied, only keep values that are >= 0,
   ## and make sure the values are sorted from largest to smallest.
