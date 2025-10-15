@@ -327,17 +327,17 @@ cvLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, k = 5, fold_ids = NU
     fit_k <- fitLASSO(X[idx_tr, , drop = FALSE], Y[idx_tr],
                       lambda_seq = lambda_seq, n_lambda = n_lambda, eps = eps)
     
-  #  Xv <- as.matrix(X[idx_val, , drop = FALSE]) # Test data X
-  #  yv <- as.numeric(Y[idx_val]) # Test data Y
-  #  pred <- Xv %*% fit_k$beta_mat # Prediction on the test data
-  #  pred <- sweep(pred, 2, fit_k$beta0_vec, "+") # Add intercept terms
-  #  resid <- matrix(yv, nrow = length(yv), ncol = L) - pred # Differences between preds. and ground truth
-  #  mse_mat[, fold] <- colMeans(resid^2) # MSE per lambda for this fold
-  #}
-  #
-  #cvm  <- rowMeans(mse_mat) # CV(lambda), i.e. average MSE over folds
-  #cvse <- apply(mse_mat, 1, sd) / sqrt(k) # SE_CV(lambda), i.a. std among CV(lambda)
-  #
+    Xv <- as.matrix(X[idx_val, , drop = FALSE]) # Test data X
+    yv <- as.numeric(Y[idx_val]) # Test data Y
+    pred <- Xv %*% fit_k$beta_mat # Prediction on the test data
+    pred <- sweep(pred, 2, fit_k$beta0_vec, "+") # Add intercept terms
+    resid <- matrix(yv, nrow = length(yv), ncol = L) - pred # Differences between preds. and ground truth
+    mse_mat[, fold] <- colMeans(resid^2) # MSE per lambda for this fold
+  }
+  
+  cvm  <- rowMeans(mse_mat) # CV(lambda), i.e. average MSE over folds
+  cvse <- apply(mse_mat, 1, sd) / sqrt(k) # SE_CV(lambda), i.a. std among CV(lambda)
+  
   ## [ToDo] Find lambda_min
   #idx_min <- which.min(cvm)
   #lambda_min <- lambda_seq[idx_min] # Choose the lambda with the smalles CV(lambda)
