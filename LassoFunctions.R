@@ -338,10 +338,10 @@ cvLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, k = 5, fold_ids = NU
   cvm  <- rowMeans(mse_mat) # CV(lambda), i.e. average MSE over folds
   cvse <- apply(mse_mat, 1, sd) / sqrt(k) # SE_CV(lambda), i.a. std among CV(lambda)
   
-  ## [ToDo] Find lambda_min
-  #idx_min <- which.min(cvm)
-  #lambda_min <- lambda_seq[idx_min] # Choose the lambda with the smalles CV(lambda)
-#
+  # [ToDo] Find lambda_min
+  idx_min <- which.min(cvm)
+  lambda_min <- lambda_seq[idx_min] # Choose the lambda with the smalles CV(lambda)
+
   ## [ToDo] Find lambda_1SE
   #thresh <- cvm[idx_min] + cvse[idx_min] # Mean CV(\lambda_{min}) plus the it's std.
   #candidates <- which(cvm <= thresh) # Lambdas with a smaller CV(lambda)
