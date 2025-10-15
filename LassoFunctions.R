@@ -342,12 +342,12 @@ cvLASSO <- function(X ,Y, lambda_seq = NULL, n_lambda = 60, k = 5, fold_ids = NU
   idx_min <- which.min(cvm)
   lambda_min <- lambda_seq[idx_min] # Choose the lambda with the smalles CV(lambda)
 
-  ## [ToDo] Find lambda_1SE
-  #thresh <- cvm[idx_min] + cvse[idx_min] # Mean CV(\lambda_{min}) plus the it's std.
-  #candidates <- which(cvm <= thresh) # Lambdas with a smaller CV(lambda)
-  ## lambda_seq is sorted from largest to smallest; pick the largest lambda within 1SE
-  #lambda_1se <- lambda_seq[min(candidates)]
-  #
+  # [ToDo] Find lambda_1SE
+  thresh <- cvm[idx_min] + cvse[idx_min] # Mean CV(\lambda_{min}) plus the it's std.
+  candidates <- which(cvm <= thresh) # Lambdas with a smaller CV(lambda)
+  # lambda_seq is sorted from largest to smallest; pick the largest lambda within 1SE
+  lambda_1se <- lambda_seq[min(candidates)]
+  
   ## Return output
   ## Output from fitLASSO on the whole data
   ## lambda_seq - the actual sequence of tuning parameters used
