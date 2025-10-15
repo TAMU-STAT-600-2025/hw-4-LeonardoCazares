@@ -30,18 +30,18 @@ plot(lambda_seq, nnz, type = "b",
      xlab = "lambda", ylab = "Number of nonzeros in beta",
      main = "LASSO sparsity path on riboflavin")
 
-## [ToDo] Use microbenchmark 10 times to check the timing of your fitLASSO function above with 60 tuning parameters
-#library(microbenchmark) # Import microbenchmark
-#set.seed(2025)
-#mb <- microbenchmark(
-#  fitLASSO(X, Y, n_lambda = 60, eps = 0.001),
-#  times = 10 # Ten repetitions
-#)
-#print(mb) # Time statistics in miliseconds
-#
-#mean_sec <- mean(mb$time) / 1e9 # Median in seconds
-#cat("Mean time (seconds):", round(mean_sec, 4), "\n")
-#
+# [ToDo] Use microbenchmark 10 times to check the timing of your fitLASSO function above with 60 tuning parameters
+library(microbenchmark) # Import microbenchmark
+set.seed(2025)
+mb <- microbenchmark(
+  fitLASSO(X, Y, n_lambda = 60, eps = 0.001),
+  times = 10 # Ten repetitions
+)
+print(mb) # Time statistics in miliseconds
+
+mean_sec <- mean(mb$time) / 1e9 # Median in seconds
+cat("Mean time (seconds):", round(mean_sec, 4), "\n")
+
 ## [ToDo] Report your median timing in the comments here: (~5.8 sec for Irina on her laptop)
 #
 #median_sec <- median(mb$time) / 1e9 # Median in seconds
