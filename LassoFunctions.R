@@ -200,15 +200,15 @@ fitLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda
   beta_mat <- matrix(0, nrow = p, ncol = L) # Matrix for betas
   fmin_vec <- numeric(L) # Vector for objective function
   
-  #beta_start <- rep(0, p)  # warm start for the first (largest) lambda
-  #for (k in seq_len(L)) {
-  #  fit <- fitLASSOstandardized(Xtilde, Ytilde, lambda = lambda_seq[k],
-  #                              beta_start = beta_start, eps = eps) # Apply fitLASSOstandardized for different lambdas
-  #  beta_mat[, k] <- fit$beta # Keep optimized beta
-  #  fmin_vec[k] <- fit$fmin # Keep current objective function
-  #  beta_start <- fit$beta  # Warm start for the next lambda
-  #}
-  #
+  beta_start <- rep(0, p)  # warm start for the first (largest) lambda
+  for (k in seq_len(L)) {
+    fit <- fitLASSOstandardized(Xtilde, Ytilde, lambda = lambda_seq[k],
+                                beta_start = beta_start, eps = eps) # Apply fitLASSOstandardized for different lambdas
+    beta_mat[, k] <- fit$beta # Keep optimized beta
+    fmin_vec[k] <- fit$fmin # Keep current objective function
+    beta_start <- fit$beta  # Warm start for the next lambda
+  }
+  
   ## Return output
   ## lambda_seq - the actual sequence of tuning parameters used
   ## beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value
